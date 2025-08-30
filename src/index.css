@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+/* Reset and base styles that work with Tailwind */
+html,
+body,
+#root {
+  height: 100%;
+}
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  /* Light theme by default - let Tailwind handle dark mode */
+  color: #213547;
+  background-color: #ffffff;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  /* Remove conflicting layout styles - let components handle layout */
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+/* Only keep essential button resets, let Tailwind handle the rest */
+button {
+  font-family: inherit;
+}
+
+/* Custom styles for react-datepicker dark theme with higher specificity */
+body .react-datepicker {
+  font-family: 'Inter', sans-serif;
+  background-color: #2d3748;
+  border-color: #4a5568;
+  border-radius: 0.5rem;
+}
+
+body .react-datepicker__header {
+  background-color: #2d3748;
+  border-bottom-color: #4a5568;
+}
+
+body .react-datepicker__current-month,
+body .react-datepicker-time__header,
+body .react-datepicker-year-header {
+  color: #e2e8f0;
+}
+
+body .react-datepicker__day-name,
+body .react-datepicker__day,
+body .react-datepicker__time-name {
+  color: #a0aec0;
+}
+
+body .react-datepicker__day--selected,
+body .react-datepicker__day--in-selecting-range,
+body .react-datepicker__day--in-range {
+  background-color: #367aff;
+  color: white;
+}
+
+body .react-datepicker__day:hover {
+  background-color: #4a5568;
+}
+
+body .react-datepicker__day--disabled {
+  color: #718096;
+}
+
+body .react-datepicker__navigation-icon::before {
+  border-color: #e2e8f0;
+}
+
+body .react-datepicker-popper[data-placement^="bottom"] .react-datepicker__triangle::before {
+  border-bottom-color: #2d3748;
+}
