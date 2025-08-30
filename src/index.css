@@ -1,37 +1,10 @@
 @import "tailwindcss";
 
-/* Reset and base styles that work with Tailwind */
+/* This rule is necessary for our main layout's centering to work correctly. */
 html,
 body,
 #root {
   height: 100%;
-}
-
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  /* Light theme by default - let Tailwind handle dark mode */
-  color: #213547;
-  background-color: #ffffff;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-body {
-  margin: 0;
-  /* Remove conflicting layout styles - let components handle layout */
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-/* Only keep essential button resets, let Tailwind handle the rest */
-button {
-  font-family: inherit;
 }
 
 /* Custom styles for react-datepicker dark theme with higher specificity */
