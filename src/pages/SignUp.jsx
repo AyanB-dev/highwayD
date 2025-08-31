@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signUpSchema } from '../auth/ValidationSchemas';
 import toast from 'react-hot-toast';
+import api from '../api/axiosConfig'; // This path is now correct for your structure
+import { useAuth } from '../context/AuthContext';
 
 import AuthLayout from '../layouts/AuthLayout';
 import Logo from '../components/Logo';
@@ -15,6 +17,8 @@ import GoogleSignInButton from '../components/GoogleSignInButton';
 export default function SignUp() {
   const [otpSent, setOtpSent] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
   const { control, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(signUpSchema),
@@ -23,19 +27,41 @@ export default function SignUp() {
 
   const onSubmit = async (data) => {
     setIsSubmitting(true);
-    console.log('Form data is valid:', data);
-
-    await new Promise(resolve => setTimeout(resolve, 1000));
 
     if (!otpSent) {
-      console.log('Getting OTP...');
-      toast.success('OTP sent successfully!');
-      setOtpSent(true);
-    } else {
-      console.log('Submitting final form...');
-      toast.success('Account created successfully!');
+      try {
+        const response = await api.post('/auth/register', {
+          name: data.name,
+          email: data.email,
+          dateOfBirth: data.dateOfBirth,
+        });
+        toast.success(response.data.message);
+        setOtpSent(true);
+      } catch (error) {
+        toast.error(error.response?.data?.error || 'An error occurred while sending OTP.');
+      } finally {
+        setIsSubmitting(false);
+      }
+      return;
     }
-    setIsSubmitting(false);
+
+    if (otpSent) {
+      try {
+        const response = await api.post('/auth/verify-otp', {
+          email: data.email,
+          otp: data.otp,
+        });
+        toast.success('Account created successfully!');
+
+        login(response.data.user, response.data.token);
+
+        navigate('/');
+      } catch (error) {
+        toast.error(error.response?.data?.error || 'An error occurred during verification.');
+      } finally {
+        setIsSubmitting(false);
+      }
+    }
   };
 
   return (
@@ -54,7 +80,6 @@ export default function SignUp() {
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
-
           <Controller
             name="name"
             control={control}
@@ -65,7 +90,6 @@ export default function SignUp() {
               </div>
             )}
           />
-
           <Controller
             name="dateOfBirth"
             control={control}
@@ -76,7 +100,6 @@ export default function SignUp() {
               </div>
             )}
           />
-
           <Controller
             name="email"
             control={control}
@@ -87,7 +110,6 @@ export default function SignUp() {
               </div>
             )}
           />
-
           {otpSent && (
             <Controller
               name="otp"
@@ -100,7 +122,6 @@ export default function SignUp() {
               )}
             />
           )}
-
           <SubmitButton type="submit" isSubmitting={isSubmitting}>
             {otpSent ? 'Sign up' : 'Get OTP'}
           </SubmitButton>
@@ -110,9 +131,7 @@ export default function SignUp() {
           <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-300"></div></div>
           <div className="relative flex justify-center text-sm"><span className="bg-white px-2 text-gray-500">OR</span></div>
         </div>
-
         <GoogleSignInButton />
-
         <p className="mt-auto pt-8 text-center text-sm text-[#6C6C6C] md:text-base">
           Already have an account?{' '}
           <Link to="/signin" className="font-medium text-[#367AFF] hover:underline">
