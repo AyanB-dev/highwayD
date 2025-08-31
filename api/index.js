@@ -22,13 +22,29 @@ const app = express();
 // CORS configuration for production
 const corsOptions = {
     origin: process.env.NODE_ENV === 'production'
-        ? ['https://your-vercel-domain.vercel.app'] // You'll update this with your actual domain
+        ? [
+            'https://highway-d.vercel.app',
+            'https://highway-d-ayanb-devs-projects.vercel.app',
+            'https://highway-d-git-main-ayanb-devs-projects.vercel.app',
+            process.env.FRONTEND_URL // Additional environment variable support
+        ].filter(Boolean) // Remove any undefined values
         : ['http://localhost:3000', 'http://localhost:5173'],
     credentials: true,
-    optionsSuccessStatus: 200
+    optionsSuccessStatus: 200,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 };
 
 app.use(cors(corsOptions));
+
+// Debug CORS in development
+if (process.env.NODE_ENV !== 'production') {
+    app.use((req, res, next) => {
+        console.log(`CORS Debug - Origin: ${req.headers.origin}, Method: ${req.method}`);
+        next();
+    });
+}
+
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
@@ -51,7 +67,19 @@ app.get('/api/health', (req, res) => {
     res.status(200).json({
         status: 'OK',
         timestamp: new Date().toISOString(),
-        environment: process.env.NODE_ENV || 'development'
+        environment: process.env.NODE_ENV || 'development',
+        cors: corsOptions.origin
+    });
+});
+
+// Global error handling middleware
+app.use((err, req, res, next) => {
+    console.error('Error:', err);
+    res.status(err.status || 500).json({
+        error: process.env.NODE_ENV === 'production'
+            ? 'Internal server error'
+            : err.message,
+        ...(process.env.NODE_ENV !== 'production' && { stack: err.stack })
     });
 });
 
