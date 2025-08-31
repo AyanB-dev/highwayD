@@ -7,18 +7,14 @@ import "react-datepicker/dist/react-datepicker.css";
 import { AuthProvider } from './context/AuthContext.jsx';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
-// Access the environment variable for the Google Client ID
 const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    {/* The Google Provider needs your Client ID */}
-    <GoogleOAuthProvider clientId={googleClientId}>
-      <BrowserRouter>
-        <AuthProvider>
-          <App />
-        </AuthProvider>
-      </BrowserRouter>
-    </GoogleOAuthProvider>
-  </React.StrictMode>
+  <GoogleOAuthProvider clientId={googleClientId}>
+    <BrowserRouter>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </BrowserRouter>
+  </GoogleOAuthProvider>
 );
