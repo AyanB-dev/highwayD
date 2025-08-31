@@ -26,6 +26,8 @@ const corsOptions = {
             'https://highway-d.vercel.app',
             'https://highway-d-ayanb-devs-projects.vercel.app',
             'https://highway-d-git-main-ayanb-devs-projects.vercel.app',
+            'https://highway-d-git-main-ayanb-devs-projects.vercel.app/signin',
+            'https://highway-gfw00u7tn-ayanb-devs-projects.vercel.app', // Current deployment URL
             process.env.FRONTEND_URL // Additional environment variable support
         ].filter(Boolean) // Remove any undefined values
         : ['http://localhost:3000', 'http://localhost:5173'],
