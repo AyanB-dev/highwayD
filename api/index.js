@@ -1,10 +1,21 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import connectDB from './config/db.js'; // Note the .js extension
-import authRoutes from './routes/authRoutes.js'; // Note the .js extension
+import path from 'path'; // Import the path module
+import { fileURLToPath } from 'url'; // Import helper for ES Modules
 
-dotenv.config();
+import connectDB from './config/db.js';
+import authRoutes from './routes/authRoutes.js';
+
+// --- CONFIGURE ENVIRONMENT VARIABLES ---
+// Get the directory name of the current module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Explicitly point dotenv to the .env file in the /api directory
+dotenv.config({ path: path.resolve(__dirname, './.env') });
+
+// --- DATABASE & SERVER SETUP ---
 connectDB();
 
 const app = express();
