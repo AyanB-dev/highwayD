@@ -9,12 +9,27 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <GoogleOAuthProvider clientId={googleClientId}>
-    <BrowserRouter>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </BrowserRouter>
-  </GoogleOAuthProvider>
-);
+const AppWrapper = () => {
+  if (!googleClientId) {
+    console.warn('VITE_GOOGLE_CLIENT_ID is not set. Google OAuth will not work.');
+    return (
+      <BrowserRouter>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </BrowserRouter>
+    );
+  }
+
+  return (
+    <GoogleOAuthProvider clientId={googleClientId}>
+      <BrowserRouter>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </BrowserRouter>
+    </GoogleOAuthProvider>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<AppWrapper />);
