@@ -1,5 +1,9 @@
 import { useGoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import api from '../api/axiosConfig';
+import axios from 'axios';
 
 const GoogleIcon = () => (
     <svg className="h-5 w-5" viewBox="0 0 48 48">
@@ -12,13 +16,29 @@ const GoogleIcon = () => (
 
 export default function GoogleSignInButton() {
     const { login } = useAuth();
+    const navigate = useNavigate();
 
     const googleLogin = useGoogleLogin({
-        onSuccess: (tokenResponse) => {
-            console.log('Google login successful:', tokenResponse);
-            login();
+        onSuccess: async (tokenResponse) => {
+            try {
+                // We receive an access token here and send it to our backend
+                const res = await api.post('/auth/google-signin', {
+                    accessToken: tokenResponse.access_token,
+                });
+
+                const { token, user } = res.data;
+                login(user, token);
+                toast.success('Login successful!');
+                navigate('/');
+            } catch (error) {
+                console.error('Backend Google Sign-In error:', error);
+                toast.error(error.response?.data?.error || 'Failed to sign in with Google.');
+            }
         },
-        onError: () => console.error('Google login failed.'),
+        onError: () => {
+            toast.error('Google login failed.');
+            console.error('Google login failed.');
+        },
     });
 
     return (

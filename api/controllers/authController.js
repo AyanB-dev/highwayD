@@ -3,6 +3,7 @@ import otpGenerator from 'otp-generator';
 import nodemailer from 'nodemailer';
 import jwt from 'jsonwebtoken';
 import { OAuth2Client } from 'google-auth-library';
+import axios from 'axios'; // We need axios in the backend for this approach
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -167,5 +168,44 @@ export const verifyOtp = async (req, res) => {
 };
 
 export const googleSignIn = async (req, res) => {
-    res.status(501).json({ message: 'Google Sign-In not implemented yet.' });
+    try {
+        const { accessToken } = req.body;
+
+        // 1. Use the access token to get user info from Google's API
+        const { data } = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+        const { name, email, sub: googleId } = data;
+
+        // 2. Check for an Existing User
+        let user = await User.findOne({ email });
+
+        if (user) {
+            // Edge case: User exists but signed up with OTP.
+            // Link their existing account to Google ID.
+            if (!user.googleId) {
+                user.googleId = googleId;
+                await user.save();
+            }
+        } else {
+            // User does not exist, create a new account.
+            user = new User({ name, email, googleId });
+            await user.save();
+        }
+
+        // 3. Generate a JWT for the authenticated user
+        const jwtPayload = { id: user._id };
+        const token = jwt.sign(jwtPayload, process.env.JWT_SECRET, { expiresIn: '3d' });
+
+        const userResponse = { _id: user._id, name: user.name, email: user.email };
+
+        // 4. Send back the token and user data
+        res.status(200).json({ message: 'Google sign-in successful!', token, user: userResponse });
+
+    } catch (error) {
+        console.error('Error in googleSignIn:', error);
+        res.status(500).json({ error: error.response?.data?.error || 'Server error during Google sign-in.' });
+    }
 };
