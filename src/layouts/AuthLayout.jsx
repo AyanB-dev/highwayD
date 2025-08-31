@@ -1,3 +1,5 @@
+import WindowsWImage from '../assets/WindowsW.png';
+
 export default function AuthLayout({ children }) {
   return (
     <main className="flex min-h-screen items-center justify-center bg-white p-4">
@@ -11,7 +13,7 @@ export default function AuthLayout({ children }) {
         <div className="relative hidden p-3 md:col-span-7 md:block">
           <img
             className="h-full w-full rounded-3xl object-cover"
-            src="src/assets/WindowsW.png"
+            src={WindowsWImage}
             alt="Abstract background"
           />
         </div>
