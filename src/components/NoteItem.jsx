@@ -9,8 +9,8 @@ export default function NoteItem({ note, onDelete }) {
         <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
             <p className="text-[#232323]">{note.text}</p>
             <button onClick={handleDelete} className="p-1">
-                {/* 3. Using the assumed lowercase filename */}
-                <img src="public/DeleteIcon.png" alt="Delete note" className="h-6 w-6" />
+                {/* Using custom delete SVG icon */}
+                <img src="/delete-icon.svg" alt="Delete note" className="h-6 w-6" />
             </button>
         </div>
     );
