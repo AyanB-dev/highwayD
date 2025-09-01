@@ -99,11 +99,11 @@ A full-stack MERN application demonstrating modern web development practices wit
 
 ### System Flow
 
-![Application Flow](./docs/assets/application-flow-diagram.svg)
+![Application Flow](./flowdiagram.png)
 
 ### Database Schema
 
-![Database Schema](./docs/assets/database-schema-diagram.svg)
+<img src="./docs/assets/database-schema-diagram.svg" alt="Database Schema" width="600" style="max-width: 100%; height: auto;">
 
 ## Technology Stack
 
