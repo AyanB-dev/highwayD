@@ -1,8 +1,10 @@
 # 🛣️ HighwayD - Full Stack Note Management Application
 
 [![Live Demo](https://img.shields.io/badge/🌐%20Live%20Demo-highway--d.vercel.app-blue?style=for-the-badge)](https://highway-d.vercel.app)
+<img width="5120" height="2000" alt="image" src="https://github.com/user-attachments/assets/de13f554-7dfc-414c-819a-932a4feb5b8b" />
 
-A full-stack MERN application demonstrating modern web development practices with user authentication, CRUD operations, and responsive design. Built as an internship assignment showcasing proficiency in React, Node.js, MongoDB, and cloud deployment.
+
+A full-stack MERN application Built as an internship assignment for Highway Delite
 
 ## Assignment Requirements Fulfilled
 
