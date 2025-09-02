@@ -104,9 +104,6 @@ A full-stack MERN application Built as an internship assignment for Highway Deli
 
 ![Application Flow](./flowdiagram.png)
 
-### Database Schema
-
-<img src="./docs/assets/database-schema-diagram.svg" alt="Database Schema" width="600" style="max-width: 100%; height: auto;">
 
 ## Technology Stack
 
